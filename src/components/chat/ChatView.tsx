@@ -88,9 +88,9 @@ export function ChatView({
                   showPresence
                 />
               ) : channel.data?.is_private ? (
-                <Lock className="size-4 text-muted-foreground" />
+                <Lock className="size-4 text-muted-foreground" aria-label="Private channel" />
               ) : (
-                <Hash className="size-4 text-muted-foreground" />
+                <Hash className="size-4 text-muted-foreground" aria-hidden="true" />
               )}
               <h1 className="truncate text-lg font-semibold">{title}</h1>
             </div>
@@ -98,14 +98,21 @@ export function ChatView({
               <p className="truncate text-xs text-muted-foreground">{channel.data.topic}</p>
             ) : null}
           </div>
-          <div className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
-            <Users className="size-4" />
-            {members.data?.length ?? 0}
-          </div>
+          <p className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+            <Users className="size-4" aria-hidden="true" />
+            <span aria-hidden="true">{members.data?.length ?? 0}</span>
+            <span className="sr-only">{members.data?.length ?? 0} members in this conversation</span>
+          </p>
         </header>
 
         <ScrollArea className="min-h-0 flex-1">
-          <div className="mx-auto max-w-3xl space-y-0.5 p-3">
+          <div
+            role="log"
+            aria-live="polite"
+            aria-relevant="additions"
+            aria-label={`Messages in ${title}`}
+            className="mx-auto max-w-3xl space-y-0.5 p-3"
+          >
             {messages.data?.length === 0 ? (
               <div className="rounded-xl border border-dashed border-border p-8 text-center">
                 <h2 className="text-base font-semibold">This is the beginning of {title}</h2>

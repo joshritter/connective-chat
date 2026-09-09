@@ -64,7 +64,7 @@ function AuthPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-sidebar px-4 py-12">
+    <main className="flex min-h-dvh items-center justify-center bg-sidebar px-4 py-12">
       <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-lg">
         <h1 className="font-display text-2xl font-bold">
           {mode === "signin" ? "Welcome back" : "Create your account"}

@@ -54,7 +54,7 @@ function WorkspaceLayout() {
 
   return (
     <PresenceProvider meId={meId}>
-      <div className="flex h-screen w-full overflow-hidden bg-background">
+      <div className="flex h-dvh w-full overflow-hidden bg-background">
         <AppSidebar meId={meId} />
         <main className="flex min-w-0 flex-1 flex-col">
           <Outlet />
