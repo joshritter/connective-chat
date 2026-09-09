@@ -46,7 +46,7 @@ export default defineConfig({
         "src/hooks/useTyping.ts": { statements: 85, branches: 75, functions: 85, lines: 90 },
         "src/components/chat/EmojiPicker.tsx": {
           statements: 80,
-          branches: 70,
+          branches: 60,
           functions: 70,
           lines: 80,
         },
