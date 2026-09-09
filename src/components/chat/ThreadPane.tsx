@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Composer } from "./Composer";
 import { MessageRow } from "./MessageRow";
+import { TypingIndicator } from "./TypingIndicator";
+import { useTyping } from "@/hooks/useTyping";
+
 import {
   deleteMessage,
   editMessage,
