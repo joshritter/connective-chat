@@ -5,7 +5,9 @@ import { EmojiPicker } from "./EmojiPicker";
 import { readRecentEmoji } from "@/lib/emoji";
 
 function setup(onSelect = vi.fn()) {
-  render(<EmojiPicker trigger={<button type="button">Add a reaction</button>} onSelect={onSelect} />);
+  render(
+    <EmojiPicker trigger={<button type="button">Add a reaction</button>} onSelect={onSelect} />,
+  );
   return { onSelect, user: userEvent.setup() };
 }
 

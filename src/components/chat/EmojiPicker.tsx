@@ -1,4 +1,12 @@
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import {
@@ -45,7 +53,9 @@ export function EmojiPicker({
       .map((emoji) => findEmoji(emoji) ?? { emoji, name: emoji, keywords: [] })
       .filter(Boolean) as EmojiEntry[];
     return [
-      ...(recentEntries.length ? [{ id: "recent", label: "Recently used", emojis: recentEntries }] : []),
+      ...(recentEntries.length
+        ? [{ id: "recent", label: "Recently used", emojis: recentEntries }]
+        : []),
       ...EMOJI_CATEGORIES,
     ];
   }, [query, recent]);
