@@ -152,46 +152,22 @@ export function MessageRow({
           aria-label={`Actions for message from ${authorName}`}
           className="absolute right-3 top-1 flex items-center gap-0.5 rounded-lg border border-border bg-card p-0.5 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus-within:opacity-100"
         >
-          {pickerOpen ? (
-            <div role="group" aria-label="Choose a reaction" className="flex items-center gap-0.5">
-              {QUICK_EMOJI.map(({ emoji, name }) => (
-                <button
-                  type="button"
-                  key={emoji}
-                  aria-label={`React with ${name}`}
-                  title={`React with ${name}`}
-                  className="rounded px-1 text-base hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  onClick={() => {
-                    onToggleReaction(message.id, emoji);
-                    setPickerOpen(false);
-                  }}
-                >
-                  <span aria-hidden="true">{emoji}</span>
-                </button>
-              ))}
-              <button
-                type="button"
-                aria-label="Close reaction picker"
-                title="Close reaction picker"
-                className="rounded px-1 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                onClick={() => setPickerOpen(false)}
+          <EmojiPicker
+            open={pickerOpen}
+            onOpenChange={setPickerOpen}
+            onSelect={(emoji) => onToggleReaction(message.id, emoji)}
+            trigger={
+              <Button
+                size="icon"
+                variant="ghost"
+                className="size-8"
+                aria-label="Add a reaction"
+                title="Add a reaction"
               >
-                <X className="size-4" aria-hidden="true" />
-              </button>
-            </div>
-          ) : (
-            <Button
-              size="icon"
-              variant="ghost"
-              className="size-8"
-              aria-label="Add a reaction"
-              title="Add a reaction"
-              aria-expanded={pickerOpen}
-              onClick={() => setPickerOpen(true)}
-            >
-              <SmilePlus className="size-4" aria-hidden="true" />
-            </Button>
-          )}
+                <SmilePlus className="size-4" aria-hidden="true" />
+              </Button>
+            }
+          />
           {showThreadButton ? (
             <Button
               size="icon"
