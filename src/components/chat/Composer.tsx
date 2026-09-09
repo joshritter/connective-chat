@@ -64,6 +64,21 @@ export function Composer({
           className="min-h-11 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0"
         />
 
+        <EmojiPicker
+          onSelect={(emoji) => setValue((current) => current + emoji)}
+          trigger={
+            <Button
+              size="icon"
+              variant="ghost"
+              className="min-h-11 min-w-11"
+              aria-label="Add emoji"
+              title="Add emoji"
+            >
+              <Smile className="size-4" aria-hidden="true" />
+            </Button>
+          }
+        />
+
         <Button
           size="icon"
           className="min-h-11 min-w-11"
