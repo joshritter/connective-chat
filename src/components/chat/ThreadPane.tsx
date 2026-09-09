@@ -30,7 +30,10 @@ export function ThreadPane({
 }) {
   const qc = useQueryClient();
 
+  const typing = useTyping(`${channelId}:${parentId}`, meId);
+
   const parent = useQuery({ queryKey: ["message", parentId], queryFn: () => getMessage(parentId) });
+
   const replies = useQuery({ queryKey: ["thread", parentId], queryFn: () => listThreadReplies(parentId) });
 
   const ids = [parentId, ...(replies.data ?? []).map((m) => m.id)];
@@ -113,12 +116,16 @@ export function ThreadPane({
         <Composer
           autoFocus
           placeholder="Reply in thread…"
+          onTyping={typing.notifyTyping}
+          onStopTyping={typing.stopTyping}
           onSend={async (body) => {
             await sendMessage({ channelId, body, parentMessageId: parentId });
             refresh();
           }}
         />
+        <TypingIndicator names={typing.typers} />
       </div>
+
     </aside>
   );
 }
