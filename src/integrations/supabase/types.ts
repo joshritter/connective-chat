@@ -277,9 +277,32 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_channel_creator: {
+        Args: { _channel_id: string; _user_id: string }
+        Returns: boolean
+      }
       is_channel_member: {
         Args: { _channel_id: string; _user_id: string }
         Returns: boolean
+      }
+      is_dm_channel: { Args: { _channel_id: string }; Returns: boolean }
+      is_open_channel: { Args: { _channel_id: string }; Returns: boolean }
+      my_channel_overview: {
+        Args: never
+        Returns: {
+          created_at: string
+          created_by: string
+          description: string
+          dm_key: string
+          id: string
+          is_archived: boolean
+          is_dm: boolean
+          is_private: boolean
+          last_read_at: string
+          name: string
+          topic: string
+          unread: number
+        }[]
       }
     }
     Enums: {
