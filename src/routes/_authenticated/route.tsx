@@ -3,6 +3,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AppSidebar } from "@/components/chat/AppSidebar";
+import { PresenceProvider } from "@/components/chat/PresenceProvider";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -52,11 +53,13 @@ function WorkspaceLayout() {
   }, [qc]);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-background">
-      <AppSidebar meId={meId} />
-      <main className="flex min-w-0 flex-1 flex-col">
-        <Outlet />
-      </main>
-    </div>
+    <PresenceProvider meId={meId}>
+      <div className="flex h-screen w-full overflow-hidden bg-background">
+        <AppSidebar meId={meId} />
+        <main className="flex min-w-0 flex-1 flex-col">
+          <Outlet />
+        </main>
+      </div>
+    </PresenceProvider>
   );
 }

@@ -49,7 +49,7 @@ export function MessageRow({
 
   return (
     <div className="group relative flex gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-surface">
-      <UserAvatar profile={message.author} />
+      <UserAvatar profile={message.author} showPresence />
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
           <span className="font-semibold text-foreground">{message.author?.display_name ?? "Someone"}</span>
