@@ -29,14 +29,36 @@ The backend uses a relational schema designed around workspaces, conversations, 
 
 ### Database Helpers
 
-| Function                                 | Role                                                                                                  |
-| ---------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `is_channel_member(channel_id, user_id)` | Checks channel membership.                                                                            |
-| `can_view_channel(channel_id, user_id)`  | Returns true for public channels or channels the user is a member of.                                 |
-| `can_view_message(message_id, user_id)`  | Returns true when the user can view the message's channel.                                            |
-| `has_role(user_id, role)`                | Checks whether a user has a given app role (`admin` or `member`).                                     |
-| `bump_thread_counters()`                 | Trigger function that updates parent reply counts on insert/delete.                                   |
-| `handle_new_user()`                      | Auth trigger that creates a profile, assigns the `member` role, and auto-joins the `general` channel. |
+| Function                                  | Role                                                                                                  |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `is_channel_member(channel_id, user_id)`  | Checks channel membership.                                                                            |
+| `can_view_channel(channel_id, user_id)`   | Returns true for public channels or channels the user is a member of.                                 |
+| `can_view_message(message_id, user_id)`   | Returns true when the user can view the message's channel.                                            |
+| `is_open_channel(channel_id)`             | Returns true for public, non-DM channels — the only ones anyone may self-join.                        |
+| `is_channel_creator(channel_id, user_id)` | Returns true when the user created the channel (used to bootstrap members).                           |
+| `is_dm_channel(channel_id)`               | Returns true for DM channels, which nobody may be added to after creation.                            |
+| `my_channel_overview()`                   | Returns the caller's channels/DMs with server-computed unread counts (powers the sidebar).            |
+| `has_role(user_id, role)`                 | Checks whether a user has a given app role (`admin` or `member`).                                     |
+| `bump_thread_counters()`                  | Trigger function that updates parent reply counts on insert/delete.                                   |
+| `guard_channel_member_role()`             | Trigger function that rejects role changes made by anyone who is not a channel owner.                 |
+| `handle_new_user()`                       | Auth trigger that creates a profile, assigns the `member` role, and auto-joins the `general` channel. |
+
+### Membership Rules
+
+A `channel_members` row may only be created when one of the following holds:
+
+- The user is adding **themselves** to an open channel, or re-joining a channel they are already in.
+- The user **created** the channel (bootstraps the owner row and DM participants).
+- The user is a member of a **private channel** and is inviting someone else. DMs are excluded — no one can be added to an existing DM.
+
+The `owner` role can only be claimed by the channel's creator at insert time; any later role change is rejected by
+`guard_channel_member_role()` unless the caller is already an owner of that channel.
+
+### Unread Counts
+
+Unread badges come from `my_channel_overview()`, which counts messages newer than the caller's `last_read_at`
+(excluding their own and soft-deleted messages) inside the database, using the `(channel_id, created_at DESC)` index.
+The client fetches only member profiles afterwards, so no message bodies are transferred to render the sidebar.
 
 ### Enums
 

@@ -99,19 +99,12 @@ export type MyChannel = Channel & {
 };
 
 export async function listMyChannels(): Promise<MyChannel[]> {
-  const userId = await getCurrentUserId();
-  if (!userId) return [];
+  const overview = (unwrap(await supabase.rpc("my_channel_overview")) ?? []) as Array<
+    Channel & { is_archived: boolean; last_read_at: string; unread: number }
+  >;
+  if (overview.length === 0) return [];
 
-  const memberships = (unwrap(
-    await supabase
-      .from("channel_members")
-      .select("channel_id, last_read_at, channel:channels(*)")
-      .eq("profile_id", userId),
-  ) ?? []) as Array<{ channel_id: string; last_read_at: string; channel: Channel | null }>;
-
-  const channelIds = memberships.map((m) => m.channel_id);
-  if (channelIds.length === 0) return [];
-
+  const channelIds = overview.map((c) => c.id);
   const allMembers = (unwrap(
     await supabase
       .from("channel_members")
@@ -119,30 +112,19 @@ export async function listMyChannels(): Promise<MyChannel[]> {
       .in("channel_id", channelIds),
   ) ?? []) as Array<{ channel_id: string; profile: Profile | null }>;
 
-  const recent = (unwrap(
-    await supabase
-      .from("messages")
-      .select("channel_id, created_at, author_id")
-      .in("channel_id", channelIds)
-      .order("created_at", { ascending: false })
-      .limit(500),
-  ) ?? []) as Array<{ channel_id: string; created_at: string; author_id: string }>;
+  const membersByChannel = new Map<string, Profile[]>();
+  for (const row of allMembers) {
+    if (!row.profile) continue;
+    const list = membersByChannel.get(row.channel_id);
+    if (list) list.push(row.profile);
+    else membersByChannel.set(row.channel_id, [row.profile]);
+  }
 
-  return memberships
-    .filter((m) => m.channel)
-    .map((m) => {
-      const channel = m.channel as Channel;
-      const members = allMembers
-        .filter((am) => am.channel_id === m.channel_id && am.profile)
-        .map((am) => am.profile as Profile);
-      const unread = recent.filter(
-        (r) =>
-          r.channel_id === m.channel_id &&
-          r.author_id !== userId &&
-          new Date(r.created_at) > new Date(m.last_read_at),
-      ).length;
-      return { ...channel, last_read_at: m.last_read_at, members, unread };
-    })
+  return overview
+    .map((channel) => ({
+      ...channel,
+      members: membersByChannel.get(channel.id) ?? [],
+    }))
     .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""));
 }
 
