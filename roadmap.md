@@ -9,3 +9,5 @@
 - [ ] DMs: open-or-create, member picker
 - [ ] Reactions, unread badges, browse page, settings page
 - [ ] Head metadata on every route
+
+- [ ] Document typing indicators in README
