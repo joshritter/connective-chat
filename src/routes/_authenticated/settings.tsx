@@ -12,9 +12,16 @@ export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
       { title: "Your profile settings — Hearth" },
-      { name: "description", content: "Update your display name, avatar and status so teammates know who you are in Hearth." },
+      {
+        name: "description",
+        content:
+          "Update your display name, avatar and status so teammates know who you are in Hearth.",
+      },
       { property: "og:title", content: "Your profile settings — Hearth" },
-      { property: "og:description", content: "Update your display name, avatar and status in Hearth." },
+      {
+        property: "og:description",
+        content: "Update your display name, avatar and status in Hearth.",
+      },
     ],
   }),
   component: SettingsPage,
@@ -57,15 +64,29 @@ function SettingsPage() {
         >
           <div className="space-y-1.5">
             <Label htmlFor="display">Display name</Label>
-            <Input id="display" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
+            <Input
+              id="display"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+            />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="avatar">Avatar image URL</Label>
-            <Input id="avatar" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://…" />
+            <Input
+              id="avatar"
+              value={avatarUrl}
+              onChange={(e) => setAvatarUrl(e.target.value)}
+              placeholder="https://…"
+            />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="status">Status</Label>
-            <Input id="status" value={statusText} onChange={(e) => setStatusText(e.target.value)} placeholder="Working on the roadmap" />
+            <Input
+              id="status"
+              value={statusText}
+              onChange={(e) => setStatusText(e.target.value)}
+              placeholder="Working on the roadmap"
+            />
           </div>
           <Button type="submit">Save changes</Button>
         </form>

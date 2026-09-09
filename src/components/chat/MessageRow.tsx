@@ -21,7 +21,12 @@ function formatTime(iso: string) {
   const sameDay = date.toDateString() === today.toDateString();
   return sameDay
     ? date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
-    : date.toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    : date.toLocaleString([], {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      });
 }
 
 export function MessageRow({
@@ -65,7 +70,11 @@ export function MessageRow({
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
           <span className="font-semibold text-foreground">{authorName}</span>
-          <time dateTime={sentAt.toISOString()} title={sentAt.toLocaleString()} className="text-xs text-muted-foreground">
+          <time
+            dateTime={sentAt.toISOString()}
+            title={sentAt.toLocaleString()}
+            className="text-xs text-muted-foreground"
+          >
             {formatTime(message.created_at)}
           </time>
           {message.edited_at && !deleted ? (

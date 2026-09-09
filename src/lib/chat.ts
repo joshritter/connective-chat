@@ -197,7 +197,11 @@ export async function listThreadReplies(parentId: string): Promise<Message[]> {
 }
 
 export async function getMessage(messageId: string): Promise<Message | null> {
-  const res = await supabase.from("messages").select(MESSAGE_SELECT).eq("id", messageId).maybeSingle();
+  const res = await supabase
+    .from("messages")
+    .select(MESSAGE_SELECT)
+    .eq("id", messageId)
+    .maybeSingle();
   return unwrap(res) as unknown as Message | null;
 }
 
@@ -282,7 +286,11 @@ export async function createChannel(input: {
 }): Promise<Channel> {
   const userId = await getCurrentUserId();
   if (!userId) throw new Error("Not signed in");
-  const name = input.name.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-_]/g, "");
+  const name = input.name
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-_]/g, "");
   if (!name) throw new Error("Channel name required");
 
   const channel = unwrap(
@@ -380,7 +388,11 @@ export async function markChannelRead(channelId: string) {
     .eq("profile_id", userId);
 }
 
-export function channelLabel(channel: { name: string | null; is_dm: boolean }, members: Profile[], meId?: string) {
+export function channelLabel(
+  channel: { name: string | null; is_dm: boolean },
+  members: Profile[],
+  meId?: string,
+) {
   if (!channel.is_dm) return channel.name ?? "channel";
   const others = members.filter((m) => m.id !== meId);
   if (others.length === 0) return "You";

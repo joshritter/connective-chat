@@ -10,7 +10,11 @@ export const Route = createFileRoute("/_authenticated/browse")({
   head: () => ({
     meta: [
       { title: "Browse channels — Hearth" },
-      { name: "description", content: "Discover open channels in your Hearth workspace and join the conversations that matter to you." },
+      {
+        name: "description",
+        content:
+          "Discover open channels in your Hearth workspace and join the conversations that matter to you.",
+      },
       { property: "og:title", content: "Browse channels — Hearth" },
       { property: "og:description", content: "Discover and join open channels in your workspace." },
     ],
@@ -29,7 +33,9 @@ function BrowsePage() {
     <div className="flex min-h-0 flex-1 flex-col">
       <header className="border-b border-border px-5 py-3">
         <h1 className="font-display text-lg font-semibold">Browse channels</h1>
-        <p className="text-xs text-muted-foreground">Open channels anyone in the workspace can join.</p>
+        <p className="text-xs text-muted-foreground">
+          Open channels anyone in the workspace can join.
+        </p>
       </header>
       <ScrollArea className="min-h-0 flex-1">
         <ul className="mx-auto max-w-2xl space-y-2 p-4">
@@ -48,7 +54,9 @@ function BrowsePage() {
               {myIds.has(channel.id) ? (
                 <Button
                   variant="outline"
-                  onClick={() => navigate({ to: "/c/$channelId", params: { channelId: channel.id } })}
+                  onClick={() =>
+                    navigate({ to: "/c/$channelId", params: { channelId: channel.id } })
+                  }
                 >
                   Open
                 </Button>

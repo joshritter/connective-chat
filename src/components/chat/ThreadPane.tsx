@@ -34,7 +34,10 @@ export function ThreadPane({
 
   const parent = useQuery({ queryKey: ["message", parentId], queryFn: () => getMessage(parentId) });
 
-  const replies = useQuery({ queryKey: ["thread", parentId], queryFn: () => listThreadReplies(parentId) });
+  const replies = useQuery({
+    queryKey: ["thread", parentId],
+    queryFn: () => listThreadReplies(parentId),
+  });
 
   const ids = [parentId, ...(replies.data ?? []).map((m) => m.id)];
   const reactions = useQuery({
@@ -135,7 +138,6 @@ export function ThreadPane({
         />
         <TypingIndicator names={typing.typers} />
       </div>
-
     </aside>
   );
 }

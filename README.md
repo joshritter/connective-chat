@@ -89,6 +89,26 @@ Hearth is a full-stack React application using TanStack Start with edge-ready se
 3. The `handle_new_user()` trigger creates a `profile`, assigns the `member` role, and joins the seeded `general` channel.
 4. The authenticated layout loads channels and starts realtime subscriptions.
 
+## Testing & code quality
+
+Unit tests run on **Vitest** + **Testing Library** in a jsdom environment, with a global
+setup (`src/test/setup.ts`) that mocks the backend client so tests never hit the network.
+
+```sh
+npm run test           # run the suite once
+npm run test:watch     # re-run on change
+npm run test:coverage  # run with coverage thresholds enforced
+npm run lint           # ESLint: TypeScript, react-hooks, jsx-a11y, Prettier
+npm run verify         # lint + tests + coverage (run before shipping)
+```
+
+Tests live beside the code they cover (`Composer.tsx` → `Composer.test.tsx`) and query the
+DOM by role and accessible name, so an unlabelled control fails the suite. Coverage
+thresholds live in `vitest.config.ts`: a global floor plus stricter per-file floors for
+modules that already have tests. Thresholds ratchet upwards only.
+
+Full rules and rationale: see [TESTING.md](./TESTING.md).
+
 ## Build with Lovable
 
 Continue developing this project in the [Lovable editor](https://lovable.dev/projects/56e580b8-a16b-411b-ad51-be1396b8f6b0).
