@@ -13,7 +13,7 @@
 - [x] Typing indicators (+ README docs)
 - [x] Accessibility pass across UI components
 - [x] Testing setup (Vitest + Testing Library), coverage thresholds, lint rules, TESTING.md
-- [ ] Full emoji picker for reactions (searchable, categorised, keyboard accessible) + tests
+- [x] Full emoji picker for reactions (searchable, categorised, keyboard accessible) + tests
 - [ ] Confirm all tests are committed to GitHub (sync happens automatically once GitHub is connected)
 
 ## Not built yet
