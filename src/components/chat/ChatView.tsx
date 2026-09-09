@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Composer } from "./Composer";
 import { MessageRow } from "./MessageRow";
 import { ThreadPane } from "./ThreadPane";
+import { TypingIndicator } from "./TypingIndicator";
 import { UserAvatar } from "./UserAvatar";
+import { useTyping } from "@/hooks/useTyping";
+
 import {
   channelLabel,
   deleteMessage,
