@@ -59,7 +59,10 @@ export function AppSidebar({ meId }: { meId: string | null }) {
         <nav className="space-y-6 p-3" aria-label="Channels and direct messages">
           <div>
             <div className="flex items-center justify-between px-2 pb-1">
-              <h2 id="sidebar-channels" className="text-xs font-semibold uppercase tracking-wider opacity-70">
+              <h2
+                id="sidebar-channels"
+                className="text-xs font-semibold uppercase tracking-wider opacity-70"
+              >
                 Channels
               </h2>
               <NewChannelDialog
@@ -123,7 +126,10 @@ export function AppSidebar({ meId }: { meId: string | null }) {
           </div>
 
           <div>
-            <h2 id="sidebar-dms" className="px-2 text-xs font-semibold uppercase tracking-wider opacity-70">
+            <h2
+              id="sidebar-dms"
+              className="px-2 text-xs font-semibold uppercase tracking-wider opacity-70"
+            >
               Direct messages
             </h2>
             <ul className="mt-1 space-y-0.5" aria-labelledby="sidebar-dms">
@@ -150,7 +156,9 @@ export function AppSidebar({ meId }: { meId: string | null }) {
                         showPresence
                         ringClassName="ring-sidebar"
                       />
-                      <span className={cn("flex-1 truncate", channel.unread > 0 && "font-semibold")}>
+                      <span
+                        className={cn("flex-1 truncate", channel.unread > 0 && "font-semibold")}
+                      >
                         {label}
                       </span>
                       {channel.unread > 0 ? (
@@ -169,7 +177,12 @@ export function AppSidebar({ meId }: { meId: string | null }) {
       </ScrollArea>
 
       <div className="flex items-center gap-2 border-t border-sidebar-border p-3">
-        <UserAvatar profile={profile.data} className="size-8" showPresence ringClassName="ring-sidebar" />
+        <UserAvatar
+          profile={profile.data}
+          className="size-8"
+          showPresence
+          ringClassName="ring-sidebar"
+        />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium">{profile.data?.display_name ?? "You"}</p>
           {profile.data?.status_text ? (

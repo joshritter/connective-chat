@@ -54,44 +54,51 @@ export function NewDmDialog({ meId, trigger }: { meId: string | null; trigger: R
           <DialogTitle>New message</DialogTitle>
           <DialogDescription>Pick one or more people to start a conversation.</DialogDescription>
         </DialogHeader>
-        <Input aria-label="Search people" placeholder="Search people" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <Input
+          aria-label="Search people"
+          placeholder="Search people"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <ScrollArea className="h-64 rounded-lg border border-border">
           <div role="group" aria-label="People">
-          <div className="p-1">
-            {list.length === 0 ? (
-              <p className="p-4 text-sm text-muted-foreground">No one else has joined yet.</p>
-            ) : null}
-            {list.map((person) => {
-              const active = selected.includes(person.id);
-              return (
-                <button
-                  type="button"
-                  key={person.id}
-                  aria-pressed={active}
-                  aria-label={`${person.display_name}${active ? ", selected" : ""}`}
-                  onClick={() =>
-                    setSelected((prev) =>
-                      prev.includes(person.id)
-                        ? prev.filter((id) => id !== person.id)
-                        : [...prev, person.id],
-                    )
-                  }
-                  className={cn(
-                    "flex min-h-11 w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                    active ? "bg-accent text-accent-foreground" : "hover:bg-surface",
-                  )}
-                >
-                  <UserAvatar profile={person} className="size-8" showPresence />
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium">{person.display_name}</p>
-                    {person.status_text ? (
-                      <p className="truncate text-xs text-muted-foreground">{person.status_text}</p>
-                    ) : null}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+            <div className="p-1">
+              {list.length === 0 ? (
+                <p className="p-4 text-sm text-muted-foreground">No one else has joined yet.</p>
+              ) : null}
+              {list.map((person) => {
+                const active = selected.includes(person.id);
+                return (
+                  <button
+                    type="button"
+                    key={person.id}
+                    aria-pressed={active}
+                    aria-label={`${person.display_name}${active ? ", selected" : ""}`}
+                    onClick={() =>
+                      setSelected((prev) =>
+                        prev.includes(person.id)
+                          ? prev.filter((id) => id !== person.id)
+                          : [...prev, person.id],
+                      )
+                    }
+                    className={cn(
+                      "flex min-h-11 w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                      active ? "bg-accent text-accent-foreground" : "hover:bg-surface",
+                    )}
+                  >
+                    <UserAvatar profile={person} className="size-8" showPresence />
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{person.display_name}</p>
+                      {person.status_text ? (
+                        <p className="truncate text-xs text-muted-foreground">
+                          {person.status_text}
+                        </p>
+                      ) : null}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </ScrollArea>
         <Button disabled={selected.length === 0 || busy} onClick={() => void start()}>

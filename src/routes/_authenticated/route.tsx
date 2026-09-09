@@ -27,7 +27,10 @@ function WorkspaceLayout() {
     const channel = supabase
       .channel("workspace-stream")
       .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, (payload) => {
-        const row = (payload.new ?? payload.old) as { channel_id?: string; parent_message_id?: string } | null;
+        const row = (payload.new ?? payload.old) as {
+          channel_id?: string;
+          parent_message_id?: string;
+        } | null;
         if (row?.channel_id) {
           void qc.invalidateQueries({ queryKey: ["messages", row.channel_id] });
         }

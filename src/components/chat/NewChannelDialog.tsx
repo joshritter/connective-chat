@@ -72,7 +72,9 @@ export function NewChannelDialog({ trigger }: { trigger: React.ReactNode }) {
           <div className="flex items-center justify-between rounded-lg border border-border p-3">
             <div>
               <p className="text-sm font-medium">Make private</p>
-              <p className="text-xs text-muted-foreground">Only invited people can find and join it.</p>
+              <p className="text-xs text-muted-foreground">
+                Only invited people can find and join it.
+              </p>
             </div>
             <Switch checked={isPrivate} onCheckedChange={setIsPrivate} />
           </div>

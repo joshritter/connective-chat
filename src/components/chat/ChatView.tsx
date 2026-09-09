@@ -39,10 +39,18 @@ export function ChatView({
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const typing = useTyping(channelId, meId);
 
-
-  const channel = useQuery({ queryKey: ["channel", channelId], queryFn: () => getChannel(channelId) });
-  const members = useQuery({ queryKey: ["members", channelId], queryFn: () => listChannelMembers(channelId) });
-  const messages = useQuery({ queryKey: ["messages", channelId], queryFn: () => listMessages(channelId) });
+  const channel = useQuery({
+    queryKey: ["channel", channelId],
+    queryFn: () => getChannel(channelId),
+  });
+  const members = useQuery({
+    queryKey: ["members", channelId],
+    queryFn: () => listChannelMembers(channelId),
+  });
+  const messages = useQuery({
+    queryKey: ["messages", channelId],
+    queryFn: () => listMessages(channelId),
+  });
 
   const messageIds = useMemo(() => (messages.data ?? []).map((m) => m.id), [messages.data]);
   const reactions = useQuery({
@@ -101,7 +109,9 @@ export function ChatView({
           <p className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
             <Users className="size-4" aria-hidden="true" />
             <span aria-hidden="true">{members.data?.length ?? 0}</span>
-            <span className="sr-only">{members.data?.length ?? 0} members in this conversation</span>
+            <span className="sr-only">
+              {members.data?.length ?? 0} members in this conversation
+            </span>
           </p>
         </header>
 
@@ -116,7 +126,9 @@ export function ChatView({
             {messages.data?.length === 0 ? (
               <div className="rounded-xl border border-dashed border-border p-8 text-center">
                 <h2 className="text-base font-semibold">This is the beginning of {title}</h2>
-                <p className="mt-1 text-sm text-muted-foreground">Say something to get things started.</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Say something to get things started.
+                </p>
               </div>
             ) : null}
 
@@ -160,7 +172,6 @@ export function ChatView({
               <TypingIndicator names={typing.typers} />
             </>
           ) : (
-
             <div className="flex items-center justify-between rounded-xl border border-border bg-card p-3">
               <p className="text-sm text-muted-foreground">You are viewing an open channel.</p>
               <Button

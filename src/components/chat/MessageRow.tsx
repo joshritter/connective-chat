@@ -3,17 +3,10 @@ import { MessageSquare, Pencil, SmilePlus, Trash2, X, Check } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { UserAvatar } from "./UserAvatar";
+import { EmojiPicker } from "./EmojiPicker";
+import { emojiName } from "@/lib/emoji";
 import type { Message, Reaction } from "@/lib/chat";
 import { cn } from "@/lib/utils";
-
-const QUICK_EMOJI: { emoji: string; name: string }[] = [
-  { emoji: "👍", name: "thumbs up" },
-  { emoji: "🎉", name: "party popper" },
-  { emoji: "❤️", name: "red heart" },
-  { emoji: "😂", name: "laughing" },
-  { emoji: "👀", name: "eyes" },
-  { emoji: "🚀", name: "rocket" },
-];
 
 function formatTime(iso: string) {
   const date = new Date(iso);
@@ -21,7 +14,12 @@ function formatTime(iso: string) {
   const sameDay = date.toDateString() === today.toDateString();
   return sameDay
     ? date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
-    : date.toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    : date.toLocaleString([], {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      });
 }
 
 export function MessageRow({
@@ -65,7 +63,11 @@ export function MessageRow({
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
           <span className="font-semibold text-foreground">{authorName}</span>
-          <time dateTime={sentAt.toISOString()} title={sentAt.toLocaleString()} className="text-xs text-muted-foreground">
+          <time
+            dateTime={sentAt.toISOString()}
+            title={sentAt.toLocaleString()}
+            className="text-xs text-muted-foreground"
+          >
             {formatTime(message.created_at)}
           </time>
           {message.edited_at && !deleted ? (
@@ -113,8 +115,8 @@ export function MessageRow({
                   <button
                     type="button"
                     aria-pressed={mine}
-                    aria-label={`${emoji} reaction, ${list.length} ${list.length === 1 ? "person" : "people"}. ${mine ? "Remove your reaction" : "Add your reaction"}`}
-                    title={`${list.length} reacted with ${emoji}`}
+                    aria-label={`${emojiName(emoji)} reaction, ${list.length} ${list.length === 1 ? "person" : "people"}. ${mine ? "Remove your reaction" : "Add your reaction"}`}
+                    title={`${list.length} reacted with ${emojiName(emoji)}`}
                     onClick={() => onToggleReaction(message.id, emoji)}
                     className={cn(
                       "flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
@@ -150,46 +152,22 @@ export function MessageRow({
           aria-label={`Actions for message from ${authorName}`}
           className="absolute right-3 top-1 flex items-center gap-0.5 rounded-lg border border-border bg-card p-0.5 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus-within:opacity-100"
         >
-          {pickerOpen ? (
-            <div role="group" aria-label="Choose a reaction" className="flex items-center gap-0.5">
-              {QUICK_EMOJI.map(({ emoji, name }) => (
-                <button
-                  type="button"
-                  key={emoji}
-                  aria-label={`React with ${name}`}
-                  title={`React with ${name}`}
-                  className="rounded px-1 text-base hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  onClick={() => {
-                    onToggleReaction(message.id, emoji);
-                    setPickerOpen(false);
-                  }}
-                >
-                  <span aria-hidden="true">{emoji}</span>
-                </button>
-              ))}
-              <button
-                type="button"
-                aria-label="Close reaction picker"
-                title="Close reaction picker"
-                className="rounded px-1 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                onClick={() => setPickerOpen(false)}
+          <EmojiPicker
+            open={pickerOpen}
+            onOpenChange={setPickerOpen}
+            onSelect={(emoji) => onToggleReaction(message.id, emoji)}
+            trigger={
+              <Button
+                size="icon"
+                variant="ghost"
+                className="size-8"
+                aria-label="Add a reaction"
+                title="Add a reaction"
               >
-                <X className="size-4" aria-hidden="true" />
-              </button>
-            </div>
-          ) : (
-            <Button
-              size="icon"
-              variant="ghost"
-              className="size-8"
-              aria-label="Add a reaction"
-              title="Add a reaction"
-              aria-expanded={pickerOpen}
-              onClick={() => setPickerOpen(true)}
-            >
-              <SmilePlus className="size-4" aria-hidden="true" />
-            </Button>
-          )}
+                <SmilePlus className="size-4" aria-hidden="true" />
+              </Button>
+            }
+          />
           {showThreadButton ? (
             <Button
               size="icon"

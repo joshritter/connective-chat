@@ -8,7 +8,10 @@ export const Route = createFileRoute("/_authenticated/c/$channelId")({
   head: () => ({
     meta: [
       { title: "Channel — Hearth" },
-      { name: "description", content: "Follow the conversation in this Hearth channel, with threads and reactions." },
+      {
+        name: "description",
+        content: "Follow the conversation in this Hearth channel, with threads and reactions.",
+      },
       { property: "og:title", content: "Channel — Hearth" },
       { property: "og:description", content: "Follow the conversation in this Hearth channel." },
     ],
