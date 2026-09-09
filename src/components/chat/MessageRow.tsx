@@ -115,8 +115,8 @@ export function MessageRow({
                   <button
                     type="button"
                     aria-pressed={mine}
-                    aria-label={`${emoji} reaction, ${list.length} ${list.length === 1 ? "person" : "people"}. ${mine ? "Remove your reaction" : "Add your reaction"}`}
-                    title={`${list.length} reacted with ${emoji}`}
+                    aria-label={`${emojiName(emoji)} reaction, ${list.length} ${list.length === 1 ? "person" : "people"}. ${mine ? "Remove your reaction" : "Add your reaction"}`}
+                    title={`${list.length} reacted with ${emojiName(emoji)}`}
                     onClick={() => onToggleReaction(message.id, emoji)}
                     className={cn(
                       "flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
