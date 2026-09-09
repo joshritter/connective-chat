@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   return (
-    <main className="min-h-screen bg-sidebar text-sidebar-foreground">
+    <main className="min-h-dvh bg-sidebar text-sidebar-foreground">
       <div className="mx-auto flex max-w-3xl flex-col items-center px-6 py-24 text-center">
         <span className="font-display text-sm font-semibold uppercase tracking-[0.3em] opacity-70">Hearth</span>
         <h1 className="mt-6 font-display text-5xl font-bold leading-tight">
@@ -47,7 +47,7 @@ function Landing() {
             { icon: MessageSquare, title: "Threads", copy: "Replies stay tucked beside the message." },
           ].map(({ icon: Icon, title, copy }) => (
             <li key={title} className="rounded-xl border border-sidebar-border p-4">
-              <Icon className="size-5 opacity-80" />
+              <Icon className="size-5 opacity-80" aria-hidden="true" />
               <h2 className="mt-3 font-semibold">{title}</h2>
               <p className="mt-1 text-sm opacity-70">{copy}</p>
             </li>

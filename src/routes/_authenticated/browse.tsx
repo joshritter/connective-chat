@@ -38,7 +38,7 @@ function BrowsePage() {
               key={channel.id}
               className="flex items-center gap-3 rounded-xl border border-border bg-card p-3"
             >
-              <Hash className="size-4 text-muted-foreground" />
+              <Hash className="size-4 text-muted-foreground" aria-hidden="true" />
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium">{channel.name}</p>
                 {channel.topic ? (

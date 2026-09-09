@@ -52,16 +52,26 @@ export function ThreadPane({
   const reactionsFor = (id: string) => (reactions.data ?? []).filter((r) => r.message_id === id);
 
   return (
-    <aside className="flex w-full max-w-md flex-col border-l border-border bg-background">
+    <aside
+      aria-label="Thread"
+      className="flex w-full max-w-md flex-col border-l border-border bg-background"
+    >
       <header className="flex items-center justify-between border-b border-border px-4 py-3">
         <h2 className="text-base font-semibold">Thread</h2>
-        <Button size="icon" variant="ghost" onClick={onClose}>
-          <X className="size-4" />
+        <Button
+          size="icon"
+          variant="ghost"
+          className="min-h-11 min-w-11"
+          aria-label="Close thread"
+          title="Close thread"
+          onClick={onClose}
+        >
+          <X className="size-4" aria-hidden="true" />
         </Button>
       </header>
 
       <ScrollArea className="flex-1">
-        <div className="space-y-1 p-2">
+        <div role="log" aria-live="polite" aria-label="Thread replies" className="space-y-1 p-2">
           {parent.data ? (
             <MessageRow
               message={parent.data}
