@@ -7,10 +7,14 @@ export function Composer({
   placeholder,
   onSend,
   autoFocus,
+  onTyping,
+  onStopTyping,
 }: {
   placeholder: string;
   onSend: (body: string) => Promise<void> | void;
   autoFocus?: boolean;
+  onTyping?: () => void;
+  onStopTyping?: () => void;
 }) {
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);
@@ -22,6 +26,7 @@ export function Composer({
     try {
       await onSend(body);
       setValue("");
+      onStopTyping?.();
     } finally {
       setBusy(false);
     }
@@ -40,12 +45,18 @@ export function Composer({
         <Textarea
           autoFocus={autoFocus}
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => {
+            setValue(e.target.value);
+            if (e.target.value.trim()) onTyping?.();
+            else onStopTyping?.();
+          }}
+          onBlur={() => onStopTyping?.()}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           rows={1}
           className="min-h-11 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0"
         />
+
         <Button size="icon" onClick={() => void submit()} disabled={!value.trim() || busy}>
           <SendHorizonal className="size-4" />
           <span className="sr-only">Send</span>

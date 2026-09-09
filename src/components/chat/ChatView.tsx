@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Composer } from "./Composer";
 import { MessageRow } from "./MessageRow";
 import { ThreadPane } from "./ThreadPane";
+import { TypingIndicator } from "./TypingIndicator";
 import { UserAvatar } from "./UserAvatar";
+import { useTyping } from "@/hooks/useTyping";
+
 import {
   channelLabel,
   deleteMessage,
@@ -34,6 +37,8 @@ export function ChatView({
 }) {
   const qc = useQueryClient();
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const typing = useTyping(channelId, meId);
+
 
   const channel = useQuery({ queryKey: ["channel", channelId], queryFn: () => getChannel(channelId) });
   const members = useQuery({ queryKey: ["members", channelId], queryFn: () => listChannelMembers(channelId) });
@@ -135,14 +140,20 @@ export function ChatView({
 
         <div className="mx-auto w-full max-w-3xl p-3">
           {isMember ? (
-            <Composer
-              placeholder={`Message ${channel.data?.is_dm ? title : `#${title}`}`}
-              onSend={async (body) => {
-                await sendMessage({ channelId, body });
-                refresh();
-              }}
-            />
+            <>
+              <Composer
+                placeholder={`Message ${channel.data?.is_dm ? title : `#${title}`}`}
+                onTyping={typing.notifyTyping}
+                onStopTyping={typing.stopTyping}
+                onSend={async (body) => {
+                  await sendMessage({ channelId, body });
+                  refresh();
+                }}
+              />
+              <TypingIndicator names={typing.typers} />
+            </>
           ) : (
+
             <div className="flex items-center justify-between rounded-xl border border-border bg-card p-3">
               <p className="text-sm text-muted-foreground">You are viewing an open channel.</p>
               <Button
