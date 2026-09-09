@@ -44,7 +44,7 @@ describe("MessageRow", () => {
 
   it("marks your own reaction as pressed", () => {
     render(<MessageRow message={message} reactions={[reaction("u1")]} meId="u1" {...noop} />);
-    expect(screen.getByRole("button", { name: /👍 reaction/i })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: /thumbs up reaction/i })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
@@ -62,7 +62,7 @@ describe("MessageRow", () => {
         onToggleReaction={onToggleReaction}
       />,
     );
-    await user.click(screen.getByRole("button", { name: /👍 reaction/i }));
+    await user.click(screen.getByRole("button", { name: /thumbs up reaction/i }));
     expect(onToggleReaction).toHaveBeenCalledWith("m1", "👍");
   });
 
