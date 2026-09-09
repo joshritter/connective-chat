@@ -70,7 +70,7 @@ export function EmojiPicker({
   }
 
   // Arrow keys move across the emoji grid, like a native picker.
-  function onGridKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+  function onGridKeyDown(event: KeyboardEvent<HTMLElement>) {
     const keys = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp", "Home", "End"];
     if (!keys.includes(event.key)) return;
     const buttons = Array.from(
@@ -133,7 +133,6 @@ export function EmojiPicker({
 
         <div
           ref={gridRef}
-          onKeyDown={onGridKeyDown}
           className="mt-2 max-h-64 overflow-y-auto pr-1"
           role="group"
           aria-label="Emoji"
@@ -162,6 +161,7 @@ export function EmojiPicker({
                       aria-label={entry.name}
                       title={entry.name}
                       onClick={() => choose(entry.emoji)}
+                      onKeyDown={onGridKeyDown}
                       className={cn(
                         "flex size-9 items-center justify-center rounded-md text-lg transition-colors",
                         "hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
