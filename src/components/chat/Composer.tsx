@@ -1,4 +1,4 @@
-import { useState, type KeyboardEvent } from "react";
+import { useId, useState, type KeyboardEvent } from "react";
 import { SendHorizonal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,6 +20,7 @@ export function Composer({
 }) {
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);
+  const hintId = useId();
   const fieldLabel = label ?? placeholder;
 
   async function submit() {
@@ -49,7 +50,7 @@ export function Composer({
           autoFocus={autoFocus}
           value={value}
           aria-label={fieldLabel}
-          aria-describedby="composer-hint"
+          aria-describedby={hintId}
           onChange={(e) => {
             setValue(e.target.value);
             if (e.target.value.trim()) onTyping?.();
@@ -73,7 +74,7 @@ export function Composer({
           <SendHorizonal className="size-4" aria-hidden="true" />
         </Button>
       </div>
-      <p id="composer-hint" className="sr-only">
+      <p id={hintId} className="sr-only">
         Press Enter to send, Shift plus Enter for a new line.
       </p>
     </div>
