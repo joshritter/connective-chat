@@ -136,7 +136,7 @@ export function AppSidebar({ meId }: { meId: string | null }) {
       </ScrollArea>
 
       <div className="flex items-center gap-2 border-t border-sidebar-border p-3">
-        <UserAvatar profile={profile.data} className="size-8" />
+        <UserAvatar profile={profile.data} className="size-8" showPresence ringClassName="ring-sidebar" />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium">{profile.data?.display_name ?? "You"}</p>
           {profile.data?.status_text ? (
