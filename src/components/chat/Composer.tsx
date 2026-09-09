@@ -1,7 +1,8 @@
 import { useId, useState, type KeyboardEvent } from "react";
-import { SendHorizonal } from "lucide-react";
+import { SendHorizonal, Smile } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { EmojiPicker } from "./EmojiPicker";
 
 export function Composer({
   placeholder,
