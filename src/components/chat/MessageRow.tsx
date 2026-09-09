@@ -3,17 +3,10 @@ import { MessageSquare, Pencil, SmilePlus, Trash2, X, Check } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { UserAvatar } from "./UserAvatar";
+import { EmojiPicker } from "./EmojiPicker";
+import { emojiName } from "@/lib/emoji";
 import type { Message, Reaction } from "@/lib/chat";
 import { cn } from "@/lib/utils";
-
-const QUICK_EMOJI: { emoji: string; name: string }[] = [
-  { emoji: "👍", name: "thumbs up" },
-  { emoji: "🎉", name: "party popper" },
-  { emoji: "❤️", name: "red heart" },
-  { emoji: "😂", name: "laughing" },
-  { emoji: "👀", name: "eyes" },
-  { emoji: "🚀", name: "rocket" },
-];
 
 function formatTime(iso: string) {
   const date = new Date(iso);
