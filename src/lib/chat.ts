@@ -128,7 +128,6 @@ export async function listMyChannels(): Promise<MyChannel[]> {
     .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""));
 }
 
-
 export async function listPublicChannels(): Promise<Channel[]> {
   const res = await supabase
     .from("channels")
