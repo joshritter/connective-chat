@@ -6,7 +6,14 @@ import { UserAvatar } from "./UserAvatar";
 import type { Message, Reaction } from "@/lib/chat";
 import { cn } from "@/lib/utils";
 
-const QUICK_EMOJI = ["👍", "🎉", "❤️", "😂", "👀", "🚀"];
+const QUICK_EMOJI: { emoji: string; name: string }[] = [
+  { emoji: "👍", name: "thumbs up" },
+  { emoji: "🎉", name: "party popper" },
+  { emoji: "❤️", name: "red heart" },
+  { emoji: "😂", name: "laughing" },
+  { emoji: "👀", name: "eyes" },
+  { emoji: "🚀", name: "rocket" },
+];
 
 function formatTime(iso: string) {
   const date = new Date(iso);
@@ -41,6 +48,8 @@ export function MessageRow({
   const [pickerOpen, setPickerOpen] = useState(false);
   const isMine = meId === message.author_id;
   const deleted = Boolean(message.deleted_at);
+  const authorName = message.author?.display_name ?? "Someone";
+  const sentAt = new Date(message.created_at);
 
   const grouped = reactions.reduce<Record<string, Reaction[]>>((acc, r) => {
     (acc[r.emoji] ||= []).push(r);
@@ -48,12 +57,17 @@ export function MessageRow({
   }, {});
 
   return (
-    <div className="group relative flex gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-surface">
+    <article
+      aria-label={`Message from ${authorName} at ${formatTime(message.created_at)}`}
+      className="group relative flex gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-surface focus-within:bg-surface"
+    >
       <UserAvatar profile={message.author} showPresence />
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
-          <span className="font-semibold text-foreground">{message.author?.display_name ?? "Someone"}</span>
-          <span className="text-xs text-muted-foreground">{formatTime(message.created_at)}</span>
+          <span className="font-semibold text-foreground">{authorName}</span>
+          <time dateTime={sentAt.toISOString()} title={sentAt.toLocaleString()} className="text-xs text-muted-foreground">
+            {formatTime(message.created_at)}
+          </time>
           {message.edited_at && !deleted ? (
             <span className="text-xs text-muted-foreground">(edited)</span>
           ) : null}
@@ -63,7 +77,12 @@ export function MessageRow({
           <p className="text-sm italic text-muted-foreground">This message was deleted.</p>
         ) : editing ? (
           <div className="mt-1 space-y-2">
-            <Textarea value={draft} onChange={(e) => setDraft(e.target.value)} rows={2} />
+            <Textarea
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              rows={2}
+              aria-label="Edit your message"
+            />
             <div className="flex gap-2">
               <Button
                 size="sm"
@@ -72,10 +91,10 @@ export function MessageRow({
                   setEditing(false);
                 }}
               >
-                <Check className="size-4" /> Save
+                <Check className="size-4" aria-hidden="true" /> Save
               </Button>
               <Button size="sm" variant="ghost" onClick={() => setEditing(false)}>
-                <X className="size-4" /> Cancel
+                <X className="size-4" aria-hidden="true" /> Cancel
               </Button>
             </div>
           </div>
@@ -86,32 +105,39 @@ export function MessageRow({
         )}
 
         {Object.keys(grouped).length > 0 ? (
-          <div className="mt-1.5 flex flex-wrap gap-1">
+          <ul aria-label="Reactions" className="mt-1.5 flex list-none flex-wrap gap-1">
             {Object.entries(grouped).map(([emoji, list]) => {
               const mine = list.some((r) => r.profile_id === meId);
               return (
-                <button
-                  key={emoji}
-                  onClick={() => onToggleReaction(message.id, emoji)}
-                  className={cn(
-                    "flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs transition-colors",
-                    mine
-                      ? "border-ember bg-accent text-accent-foreground"
-                      : "border-border bg-card text-muted-foreground hover:border-ember",
-                  )}
-                >
-                  <span>{emoji}</span>
-                  <span>{list.length}</span>
-                </button>
+                <li key={emoji}>
+                  <button
+                    type="button"
+                    aria-pressed={mine}
+                    aria-label={`${emoji} reaction, ${list.length} ${list.length === 1 ? "person" : "people"}. ${mine ? "Remove your reaction" : "Add your reaction"}`}
+                    title={`${list.length} reacted with ${emoji}`}
+                    onClick={() => onToggleReaction(message.id, emoji)}
+                    className={cn(
+                      "flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                      mine
+                        ? "border-ember bg-accent text-accent-foreground"
+                        : "border-border bg-card text-muted-foreground hover:border-ember",
+                    )}
+                  >
+                    <span aria-hidden="true">{emoji}</span>
+                    <span aria-hidden="true">{list.length}</span>
+                  </button>
+                </li>
               );
             })}
-          </div>
+          </ul>
         ) : null}
 
         {showThreadButton && message.reply_count > 0 ? (
           <button
+            type="button"
             onClick={() => onOpenThread?.(message)}
-            className="mt-1.5 text-xs font-semibold text-ember hover:underline"
+            aria-label={`Open thread with ${message.reply_count} ${message.reply_count === 1 ? "reply" : "replies"}`}
+            className="mt-1.5 text-xs font-semibold text-ember hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {message.reply_count} {message.reply_count === 1 ? "reply" : "replies"}
           </button>
@@ -119,30 +145,61 @@ export function MessageRow({
       </div>
 
       {!deleted ? (
-        <div className="absolute right-3 top-1 flex items-center gap-0.5 rounded-lg border border-border bg-card p-0.5 opacity-0 shadow-sm transition-opacity group-hover:opacity-100">
+        <div
+          role="toolbar"
+          aria-label={`Actions for message from ${authorName}`}
+          className="absolute right-3 top-1 flex items-center gap-0.5 rounded-lg border border-border bg-card p-0.5 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus-within:opacity-100"
+        >
           {pickerOpen ? (
-            <div className="flex items-center gap-0.5">
-              {QUICK_EMOJI.map((emoji) => (
+            <div role="group" aria-label="Choose a reaction" className="flex items-center gap-0.5">
+              {QUICK_EMOJI.map(({ emoji, name }) => (
                 <button
+                  type="button"
                   key={emoji}
-                  className="rounded px-1 text-base hover:bg-surface"
+                  aria-label={`React with ${name}`}
+                  title={`React with ${name}`}
+                  className="rounded px-1 text-base hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   onClick={() => {
                     onToggleReaction(message.id, emoji);
                     setPickerOpen(false);
                   }}
                 >
-                  {emoji}
+                  <span aria-hidden="true">{emoji}</span>
                 </button>
               ))}
+              <button
+                type="button"
+                aria-label="Close reaction picker"
+                title="Close reaction picker"
+                className="rounded px-1 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                onClick={() => setPickerOpen(false)}
+              >
+                <X className="size-4" aria-hidden="true" />
+              </button>
             </div>
           ) : (
-            <Button size="icon" variant="ghost" className="size-7" onClick={() => setPickerOpen(true)}>
-              <SmilePlus className="size-4" />
+            <Button
+              size="icon"
+              variant="ghost"
+              className="size-8"
+              aria-label="Add a reaction"
+              title="Add a reaction"
+              aria-expanded={pickerOpen}
+              onClick={() => setPickerOpen(true)}
+            >
+              <SmilePlus className="size-4" aria-hidden="true" />
             </Button>
           )}
           {showThreadButton ? (
-            <Button size="icon" variant="ghost" className="size-7" onClick={() => onOpenThread?.(message)}>
-              <MessageSquare className="size-4" />
+            <Button
+              size="icon"
+              variant="ghost"
+              className="size-8"
+              aria-label="Reply in thread"
+              title="Reply in thread"
+              onClick={() => onOpenThread?.(message)}
+            >
+              <MessageSquare className="size-4" aria-hidden="true" />
             </Button>
           ) : null}
           {isMine ? (
@@ -150,26 +207,30 @@ export function MessageRow({
               <Button
                 size="icon"
                 variant="ghost"
-                className="size-7"
+                className="size-8"
+                aria-label="Edit your message"
+                title="Edit message"
                 onClick={() => {
                   setDraft(message.body);
                   setEditing(true);
                 }}
               >
-                <Pencil className="size-4" />
+                <Pencil className="size-4" aria-hidden="true" />
               </Button>
               <Button
                 size="icon"
                 variant="ghost"
-                className="size-7 text-destructive"
+                className="size-8 text-destructive"
+                aria-label="Delete your message"
+                title="Delete message"
                 onClick={() => onDelete(message.id)}
               >
-                <Trash2 className="size-4" />
+                <Trash2 className="size-4" aria-hidden="true" />
               </Button>
             </>
           ) : null}
         </div>
       ) : null}
-    </div>
+    </article>
   );
 }
