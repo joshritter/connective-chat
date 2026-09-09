@@ -116,6 +116,8 @@ export function AppSidebar({ meId }: { meId: string | null }) {
                     <UserAvatar
                       profile={channel.members.find((m) => m.id !== meId) ?? null}
                       className="size-5"
+                      showPresence
+                      ringClassName="ring-sidebar"
                     />
                     <span className={cn("flex-1 truncate", channel.unread > 0 && "font-semibold")}>
                       {channelLabel(channel, channel.members, meId ?? undefined)}

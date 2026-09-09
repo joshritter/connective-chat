@@ -77,7 +77,7 @@ export function NewDmDialog({ meId, trigger }: { meId: string | null; trigger: R
                     active ? "bg-accent text-accent-foreground" : "hover:bg-surface",
                   )}
                 >
-                  <UserAvatar profile={person} className="size-8" />
+                  <UserAvatar profile={person} className="size-8" showPresence />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">{person.display_name}</p>
                     {person.status_text ? (

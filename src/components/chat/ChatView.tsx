@@ -80,6 +80,7 @@ export function ChatView({
                 <UserAvatar
                   profile={(members.data ?? []).find((m) => m.id !== meId) ?? null}
                   className="size-6"
+                  showPresence
                 />
               ) : channel.data?.is_private ? (
                 <Lock className="size-4 text-muted-foreground" />
