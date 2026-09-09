@@ -72,4 +72,10 @@ export default tseslint.config(
     },
   },
   eslintPluginPrettier,
+  {
+    // Auto-generated backend integration files are rewritten by the platform,
+    // so their formatting is not ours to enforce.
+    files: ["src/integrations/**/*.{ts,tsx}"],
+    rules: { "prettier/prettier": "off" },
+  },
 );
