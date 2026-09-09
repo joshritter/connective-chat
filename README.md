@@ -75,7 +75,12 @@ Hearth is a full-stack React application using TanStack Start with edge-ready se
 - **Server functions**: Internal backend calls use `createServerFn` from `@tanstack/react-start` (e.g., fetching channels, sending messages, creating DMs). Public HTTP endpoints live under `src/routes/api/public/*`.
 - **Real-time updates**: The authenticated layout subscribes to Supabase Realtime for `INSERT`, `UPDATE`, and `DELETE` events on `messages`, then invalidates React Query caches so messages appear instantly across clients.
 - **Presence**: A `PresenceProvider` joins the `presence:workspace` realtime channel, tracks local user activity/idle state, and exposes an online/away map used by avatars throughout the UI.
+- **Typing indicators**: `src/hooks/useTyping.ts` joins an ephemeral Realtime **broadcast** channel scoped per conversation — `typing:<channelId>` for a channel or DM, and `typing:<channelId>:<parentMessageId>` for a thread, so thread typing never leaks into the main channel. Nothing is written to the database.
+  - `notifyTyping()` fires from the composer's `onChange`, throttled to one broadcast every 2s, with payload `{ user_id, display_name }`.
+  - Received events are held in a ref-backed map with timestamps; a 1s interval prunes entries older than 4s, and an explicit `stop` event is broadcast on send, blur, and unmount.
+  - `TypingIndicator.tsx` renders a fixed-height line under the composer ("Sam is typing…", "Sam and Alex are typing…", "Sam, Alex and 2 others are typing…"), so the layout never shifts. Your own events are filtered out via `broadcast: { self: false }` plus a user-id check.
 - **Security**: Row-Level Security (RLS) policies enforce that users can only read/write data they are authorized to access. Admin checks use the dedicated `user_roles` table via server-side validation.
+
 
 ### Authentication Flow
 

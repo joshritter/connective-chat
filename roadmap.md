@@ -10,4 +10,4 @@
 - [ ] Reactions, unread badges, browse page, settings page
 - [ ] Head metadata on every route
 
-- [ ] Document typing indicators in README
+- [x] Document typing indicators in README
